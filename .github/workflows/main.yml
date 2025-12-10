@@ -196,7 +196,7 @@ jobs:
   #       run: git add -A --force
 
       - name: Configure Remote Repository
-        working_directory: ${{ runner.temp }}
+        working-directory: ${{ runner.temp }}
         run: |
           git init
           git remote add origin "${{ env.DOTENV_DESTINATION_REPOSITORY }}"
@@ -205,7 +205,7 @@ jobs:
 
       - name: Push the branch to the destination repository
         if: github.ref_type == 'branch'
-        working_directory: ${{ runner.temp }}
+        working-directory: ${{ runner.temp }}
         run: |
           git commit -m "${COMMIT_MESSAGE}" || echo "No changes to commit"
           git push origin $DESTINATION_REPOSITORY_BRANCH
