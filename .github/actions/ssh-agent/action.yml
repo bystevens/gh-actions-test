@@ -1,5 +1,5 @@
-name: Install ssh key and start ssh agent.
-description: Installs a password protected private ssh key.
+name: Install ssh key.
+description: Installs a private ssh key.
 inputs:
   private_key:
     description: 'The private key to use for ssh-agent.'
