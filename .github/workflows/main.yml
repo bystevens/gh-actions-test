@@ -199,7 +199,7 @@ jobs:
           ARTIFACT_BRANCH="artifact-${BRANCH_NAME}"
 
           git checkout --orphan "${ARTIFACT_BRANCH}"
-          git rm -rf . > /dev/null 2>&1 || true
+          find . -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
 
           # Copy full working tree into orphan branch
           git add -A > /dev/null 2>&1
