@@ -42,11 +42,6 @@ runs:
         ssh-keyscan -t rsa,ssh-ed25519 ${{ env.REMOTE_GIT_HOST }} >> ~/.ssh/known_hosts
       shell: bash
 
-    - name: Test SSH connection.
-      run: |
-        ssh -T git@github.com
-      shell: bash
-
     # Required for passphrase protected rsa key.
     # - name: Create ask_pass file.
     #   env:
@@ -61,4 +56,9 @@ runs:
     - name: Start ssh-agent.
       run: |
         ssh-agent -a ${{ env.SSH_AUTH_SOCK }}
+      shell: bash
+
+    - name: Test SSH connection.
+      run: |
+        ssh -T git@github.com
       shell: bash
