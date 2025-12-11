@@ -187,6 +187,7 @@ jobs:
         working-directory: ${{ github.workspace }}/deploy-artifact
         run: |
           git remote add remote "${{ env.DESTINATION_REPOSITORY }}"
+          git fetch remote
           git remote -v
           git add -A --force > /dev/null
           git commit -m "${COMMIT_MESSAGE}" || echo "No changes to commit"
@@ -196,6 +197,7 @@ jobs:
         if: github.ref_type == 'branch'
         working-directory: ${{ github.workspace }}/deploy-artifact
         run: |
+          git pull remote $DESTINATION_REPOSITORY_BRANCH --rebase || echo "No remote branch to pull"
           git push -u remote "HEAD:refs/heads/${DESTINATION_REPOSITORY_BRANCH}" --force
 
       - name: Push the tag to the destination repository
