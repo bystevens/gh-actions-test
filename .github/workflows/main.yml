@@ -205,4 +205,4 @@ jobs:
         working-directory: ${{ github.workspace }}/deploy-artifact
         run: |
           git fetch --tags
-          git push -u remote "tags/${{ env.DESTINATION_REPOSITORY_BRANCH }}" --force
+          git push -u remote "refs/tags/${DESTINATION_REPOSITORY_BRANCH}:refs/tags/${DESTINATION_REPOSITORY_BRANCH}" --force
