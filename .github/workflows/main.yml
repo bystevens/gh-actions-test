@@ -169,7 +169,6 @@ jobs:
           git config --global user.name $USER_NAME
           git config --global user.email $USER_EMAIL
           git config --global push.default current
-          git config --global init.defaultBranch main
 
       # - name: clone destination repository
       #   run: |
@@ -198,11 +197,12 @@ jobs:
         working-directory: ${{ github.workspace }}/deploy-artifact
         run: |
           git pull remote $DESTINATION_REPOSITORY_BRANCH --rebase || echo "No remote branch to pull"
-          git push -u remote "HEAD:refs/heads/${DESTINATION_REPOSITORY_BRANCH}" --force
+          git push remote "HEAD:refs/heads/${DESTINATION_REPOSITORY_BRANCH}" --force
 
+        # This might not work if you tag a commit that's not on develop or main
       - name: Push the tag to the destination repository
         if: github.ref_type == 'tag'
         working-directory: ${{ github.workspace }}/deploy-artifact
         run: |
           git fetch --tags
-          git push -u remote "refs/tags/${DESTINATION_REPOSITORY_BRANCH}:refs/tags/${DESTINATION_REPOSITORY_BRANCH}" --force
+          git push remote "refs/tags/${DESTINATION_REPOSITORY_BRANCH}:refs/tags/${DESTINATION_REPOSITORY_BRANCH}" --force
