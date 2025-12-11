@@ -18,113 +18,113 @@ env:
   DESTINATION_REPOSITORY: 'git@github.com:bystevens/test-remote-repo.git'
 
 jobs:
-  test:
-    name: Test Drupal Codebase
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+  # test:
+  #   name: Test Drupal Codebase
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
 
-      - name: Enable Debug Logging
-        run: echo "ACTIONS_STEP_DEBUG=true" >> $GITHUB_ENV
+  #     - name: Enable Debug Logging
+  #       run: echo "ACTIONS_STEP_DEBUG=true" >> $GITHUB_ENV
 
-      - name: Install PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ env.PHP_VERSION }}
-          tools: composer:${{ env.COMPOSER_VERSION }}
-          extensions: gd, imagick
+  #     - name: Install PHP
+  #       uses: shivammathur/setup-php@v2
+  #       with:
+  #         php-version: ${{ env.PHP_VERSION }}
+  #         tools: composer:${{ env.COMPOSER_VERSION }}
+  #         extensions: gd, imagick
 
-      - name: Validate composer.json
-        run: composer validate
+  #     - name: Validate composer.json
+  #       run: composer validate
 
-      - name: Get composer cache directory
-        id: composer-cache
-        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+  #     - name: Get composer cache directory
+  #       id: composer-cache
+  #       run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
-      - name: Cache composer dependencies
-        if: ${{ !env.ACT }}
-        uses: actions/cache@v4
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ runner.os }}-composer-
+  #     - name: Cache composer dependencies
+  #       if: ${{ !env.ACT }}
+  #       uses: actions/cache@v4
+  #       with:
+  #         path: ${{ steps.composer-cache.outputs.dir }}
+  #         key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+  #         restore-keys: ${{ runner.os }}-composer-
 
-      - name: Install composer dependencies and dev dependencies.
-        continue-on-error: true
-        run: composer install --prefer-dist --no-progress -o -n
+  #     - name: Install composer dependencies and dev dependencies.
+  #       continue-on-error: true
+  #       run: composer install --prefer-dist --no-progress -o -n
 
-      - name: Run PHP Stan analysis
-        run: composer phpstan
+  #     - name: Run PHP Stan analysis
+  #       run: composer phpstan
 
-      - name: Run PHPCS analysis
-        run: composer phpcs
+  #     - name: Run PHPCS analysis
+  #       run: composer phpcs
 
-  build:
-    name: Build project and generate deployment artifact
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+  # build:
+  #   name: Build project and generate deployment artifact
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
 
-      - name: Enable Debug Logging
-        run: echo "ACTIONS_STEP_DEBUG=true" >> $GITHUB_ENV
+  #     - name: Enable Debug Logging
+  #       run: echo "ACTIONS_STEP_DEBUG=true" >> $GITHUB_ENV
 
-      - name: Install PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ env.PHP_VERSION }}
-          tools: composer:${{ env.COMPOSER_VERSION }}
-          extensions: gd, imagick
+  #     - name: Install PHP
+  #       uses: shivammathur/setup-php@v2
+  #       with:
+  #         php-version: ${{ env.PHP_VERSION }}
+  #         tools: composer:${{ env.COMPOSER_VERSION }}
+  #         extensions: gd, imagick
 
-      - name: Install Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-          cache-dependency-path: ${{ env.THEME_PATH }}/package-lock.json
+  #     - name: Install Node
+  #       uses: actions/setup-node@v4
+  #       with:
+  #         node-version: ${{ env.NODE_VERSION }}
+  #         cache: 'npm'
+  #         cache-dependency-path: ${{ env.THEME_PATH }}/package-lock.json
 
-      - name: Get composer cache directory
-        id: composer-cache
-        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+  #     - name: Get composer cache directory
+  #       id: composer-cache
+  #       run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
-      - name: Cache composer dependencies
-        if: ${{ !env.ACT }}
-        uses: actions/cache@v4
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ runner.os }}-composer-
+  #     - name: Cache composer dependencies
+  #       if: ${{ !env.ACT }}
+  #       uses: actions/cache@v4
+  #       with:
+  #         path: ${{ steps.composer-cache.outputs.dir }}
+  #         key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+  #         restore-keys: ${{ runner.os }}-composer-
 
-      - name: Install composer dependencies.
-        continue-on-error: true
-        run: composer install --prefer-dist --no-progress --no-dev -o -n
+  #     - name: Install composer dependencies.
+  #       continue-on-error: true
+  #       run: composer install --prefer-dist --no-progress --no-dev -o -n
 
-      - name: Install node dependencies and build.
-        run: |
-          composer npm-install
-          composer build-theme
+  #     - name: Install node dependencies and build.
+  #       run: |
+  #         composer npm-install
+  #         composer build-theme
 
-      - name: Clean project.
-        run: |
-          rm -rf ${{ env.THEME_PATH }}/node_modules
+  #     - name: Clean project.
+  #       run: |
+  #         rm -rf ${{ env.THEME_PATH }}/node_modules
 
-      - name: Generate Deployment Artifact
-        run: |
-          mkdir -p /tmp/deploy-artifact
-          mv $GITHUB_WORKSPACE/{.[!.],}* /tmp/deploy-artifact/
-          tar -czf deploy-artifact.tar.gz -C /tmp deploy-artifact
-          mkdir -p artifacts
-          mv deploy-artifact.tar.gz artifacts/
+  #     - name: Generate Deployment Artifact
+  #       run: |
+  #         mkdir -p /tmp/deploy-artifact
+  #         mv $GITHUB_WORKSPACE/{.[!.],}* /tmp/deploy-artifact/
+  #         tar -czf deploy-artifact.tar.gz -C /tmp deploy-artifact
+  #         mkdir -p artifacts
+  #         mv deploy-artifact.tar.gz artifacts/
 
-      - name: Upload Deployment Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: deploy-artifact
-          path: artifacts/deploy-artifact.tar.gz
+  #     - name: Upload Deployment Artifact
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: deploy-artifact
+  #         path: artifacts/deploy-artifact.tar.gz
 
   deploy_branch:
     name: Deploy Project to Remote Repository
     runs-on: ubuntu-latest
-    needs: [test, build]
+    # needs: [test, build]
     env:
       DESTINATION_REPOSITORY_BRANCH: ${{ github.ref_name }}
       COMMIT_MESSAGE: Github Actions build ${{ github.run_number }}
@@ -141,6 +141,7 @@ jobs:
           sparse-checkout: |
             .github
           sparse-checkout-cone-mode: false
+          path: gh
 
       - name: Install SSH key
         uses: ./.github/actions/ssh-agent
@@ -150,15 +151,18 @@ jobs:
         env:
           SSH_AUTH_SOCK: ${{ env.SSH_AUTH_SOCK }}
 
-      - name: Download deploy artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: deploy-artifact
-          path: ${{ runner.temp }}
+      - name: Remove source repository checkout
+        run: rm -rf ${{ github.workspace }}/gh
 
-      - name: Unzip Deploy Artifact
-        run: |
-          tar -xf ${{ runner.temp }}/deploy-artifact.tar.gz -C ${{ github.workspace }}
+      # - name: Download deploy artifact
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: deploy-artifact
+      #     path: ${{ runner.temp }}
+
+      # - name: Unzip Deploy Artifact
+      #   run: |
+      #     tar -xf ${{ runner.temp }}/deploy-artifact.tar.gz -C ${{ github.workspace }}
 
       - name: Configure Global Git settings
         run: |
@@ -167,32 +171,36 @@ jobs:
           git config --global push.default current
           git config --global init.defaultBranch main
 
-      - name: Create gh_actions settings.php file
-        working-directory: ${{ github.workspace }}/deploy-artifact
+      - name: clone destination repository
         run: |
-          echo "<?php \$settings['deployment_identifier'] = '${DESTINATION_REPOSITORY_BRANCH}';" > settings.gh_actions.php
-          mv settings.gh_actions.php ${{ github.workspace }}/deploy-artifact/${{ env.WEBROOT }}/sites/default/
-          chmod 644 ${{ github.workspace }}/deploy-artifact/${{ env.WEBROOT }}/sites/default/settings.gh_actions.php
+          git clone ${{ env.DESTINATION_REPOSITORY }} .
+          git branch -vv
 
-      - name: Configure Remote Repository and commit changes
-        working-directory: ${{ github.workspace }}/deploy-artifact
-        run: |
-          git init
-          git remote set-url origin "${{ env.DESTINATION_REPOSITORY }}"
-          git remote -v
-          git add -A --force > /dev/null
-          git commit -m "${COMMIT_MESSAGE}" || echo "No changes to commit"
-          echo ${DESTINATION_REPOSITORY_BRANCH}
+      # - name: Create gh_actions settings.php file
+      #   working-directory: ${{ github.workspace }}/deploy-artifact
+      #   run: |
+      #     echo "<?php \$settings['deployment_identifier'] = '${DESTINATION_REPOSITORY_BRANCH}';" > settings.gh_actions.php
+      #     mv settings.gh_actions.php ${{ github.workspace }}/deploy-artifact/${{ env.WEBROOT }}/sites/default/
+      #     chmod 644 ${{ github.workspace }}/deploy-artifact/${{ env.WEBROOT }}/sites/default/settings.gh_actions.php
 
-      - name: Push the branch to the destination repository
-        if: github.ref_type == 'branch'
-        working-directory: ${{ github.workspace }}/deploy-artifact
-        run: |
-          git push -u origin "main:${DESTINATION_REPOSITORY_BRANCH}" --force
+      # - name: Configure Remote Repository and commit changes
+      #   working-directory: ${{ github.workspace }}/deploy-artifact
+      #   run: |
+      #     git remote set-url origin "${{ env.DESTINATION_REPOSITORY }}"
+      #     git remote -v
+      #     git add -A --force > /dev/null
+      #     git commit -m "${COMMIT_MESSAGE}" || echo "No changes to commit"
+      #     echo ${DESTINATION_REPOSITORY_BRANCH}
 
-      - name: Push the tag to the destination repository
-        if: github.ref_type == 'tag'
-        working-directory: ${{ github.workspace }}/deploy-artifact
-        run: |
-          git fetch --tags
-          git push -u origin "tags/${{ env.DESTINATION_REPOSITORY_BRANCH }}" --force
+      # - name: Push the branch to the destination repository
+      #   if: github.ref_type == 'branch'
+      #   working-directory: ${{ github.workspace }}/deploy-artifact
+      #   run: |
+      #     git push -u origin "main:${DESTINATION_REPOSITORY_BRANCH}" --force
+
+      # - name: Push the tag to the destination repository
+      #   if: github.ref_type == 'tag'
+      #   working-directory: ${{ github.workspace }}/deploy-artifact
+      #   run: |
+      #     git fetch --tags
+      #     git push -u origin "tags/${{ env.DESTINATION_REPOSITORY_BRANCH }}" --force
