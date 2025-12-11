@@ -59,8 +59,8 @@ runs:
         ssh-add ~/.ssh/gh_actions
       shell: bash
 
-    # - name: Test SSH connection.
-    #   run: |
-    #     ls -la ~/.ssh
-    #     ssh -Tv git@github.com
-    #   shell: bash
+    - name: Test SSH connection.
+      run: |
+        ls -la ~/.ssh
+        ssh -Tv git@github.com
+      shell: bash
