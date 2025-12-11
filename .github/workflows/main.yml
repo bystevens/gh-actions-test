@@ -199,10 +199,9 @@ jobs:
           ARTIFACT_BRANCH="artifact-${BRANCH_NAME}"
 
           git checkout --orphan "${ARTIFACT_BRANCH}"
-          find . -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
 
           # Copy full working tree into orphan branch
-          git add -A > /dev/null 2>&1
+          git add -A --force > /dev/null 2>&1
 
           git commit -m "Build artifacts for ${BRANCH_NAME} (${GITHUB_SHA})"
 
