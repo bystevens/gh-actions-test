@@ -52,9 +52,8 @@ runs:
     #     chmod 755 ~/ssh_askpass
     #   shell: bash
 
-    # # Use ssh-agent so we don't have to type passphrase each time.
-    # - name: Start ssh-agent.
-    #   run: |
-    #     ssh-agent -a ${{ env.SSH_AUTH_SOCK }}
-    #     DISPLAY=None SSH_ASKPASS=~/ssh_askpass ssh-add ~/.ssh/gh_actions < /dev/null
-    #   shell: bash
+    # Use ssh-agent so we don't have to type passphrase each time.
+    - name: Start ssh-agent.
+      run: |
+        ssh-agent -a ${{ env.SSH_AUTH_SOCK }}
+      shell: bash

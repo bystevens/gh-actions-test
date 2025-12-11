@@ -60,7 +60,7 @@ jobs:
         run: composer phpcs
 
   build:
-    name: Test and Build project
+    name: Build project and generate deployment artifact
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -195,4 +195,4 @@ jobs:
         working-directory: ${{ github.workspace }}/deploy-artifact
         run: |
           git fetch --tags
-          git push -u origin "tags/${DESTINATION_REPOSITORY_BRANCH}" --force
+          git push -u origin "tags/${{ env.DESTINATION_REPOSITORY_BRANCH }}" --force
