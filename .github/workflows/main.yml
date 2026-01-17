@@ -225,8 +225,5 @@ jobs:
         run: |
           TAG_NAME="${GITHUB_REF#refs/tags/}"
 
-          # Create orphan tag commit
-          git checkout --orphan "artifact-tag-${TAG_NAME}"
-
           # Force push a new tag
           git push artifact "HEAD:refs/tags/${TAG_NAME}" --force
