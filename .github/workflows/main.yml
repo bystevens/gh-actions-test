@@ -228,6 +228,5 @@ jobs:
           # Create orphan tag commit
           git checkout --orphan "artifact-tag-${TAG_NAME}"
 
-          git add -A --force > /dev/null 2>&1
-          git commit -m "Artifact build for tag ${TAG_NAME}"
+          # Force push a new tag
           git push artifact "HEAD:refs/tags/${TAG_NAME}" --force
